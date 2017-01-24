@@ -62,14 +62,16 @@ int server()
 		eventno = epoll_wait(epfd, events, MAXEVENT, 1000);
 		if(eventno==-1){
 			perror("epoll_wait err");
-			exit(-1);
+			exit_flag = -1;
+			goto end;
 		}
 		for(i=0;i<eventno;++i){
 			if((events[i].events&EPOLLERR)||
-			    (events[i].events&EPOLLHUP)||
-			    (!(events[i].events&EPOLLIN))){
+			    (events[i].events&EPOLLHUP)||){
 				printf("epoll err\n");
 				continue;
+			}else if(events[i].data.ptr->fd==listenfd){
+
 			}
 		}
 	}
