@@ -17,14 +17,21 @@
 #include <errno.h>
 #include <time.h>
 
+
 /* net lib */
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 
 #include <sys/epoll.h>
 
-/*  */
+/* linux kernal data st */
+#include "list.h"
+#include "rbtree.h"
+
+/* LIMIT MACRO */
 #define LISTENPORT 20124
 
 #define HEADLEN 4
@@ -41,7 +48,8 @@ typedef struct{
 
 }epdata;
 
-int setSocketNonblock(int);
+int set_socket_nonblock(int);
+int create_and_bind(const char *);
 
 
 #endif

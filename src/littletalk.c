@@ -33,7 +33,7 @@ int server()
 		exit(-1);
 	}
 
-	nret = setSocketNonblock(listenfd);
+	nret = set_socket_nonblock(listenfd);
 	if(nret==-1){
 		perror("setSocketNonblock err");
 		exit(-1);
@@ -66,20 +66,21 @@ int server()
 			goto end;
 		}
 		for(i=0;i<eventno;++i){
-			if((events[i].events&EPOLLERR)||
-			    (events[i].events&EPOLLHUP)||){
+			if((events[i].events&EPOLLERR)|| \
+					(events[i].events&EPOLLHUP)){
 				printf("epoll err\n");
 				continue;
-			}else if(events[i].data.ptr->fd==listenfd){
+				//			}else if(events[i].data.ptr->fd==listenfd){
 
-			}
+		}
 		}
 	}
-	end:
-		free(epd);
-		exit(exit_flag);
-		return 0;
+end:
+	free(epd);
+	exit(exit_flag);
+	return 0;
 }
+
 
 int main(int argc, char **argv)
 {
