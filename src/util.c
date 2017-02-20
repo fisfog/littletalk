@@ -12,14 +12,14 @@ int set_socket_nonblock(int sfd)
 	int flags, ret;
 	flags = fcntl(sfd, F_GETFL, 0);
 	if(flags==-1){
-		perror("fcntl get fd flags err!");
+		little_log_error(__FILE__,__LINE__,"fcntl get fd flags err");
 		return -1;
 	}
 
 	flags |= O_NONBLOCK;
 	ret = fcntl(sfd, F_SETFL, flags);
 	if(ret==-1){
-		perror("fcntl set fd flags err!");
+		little_log_error(__FILE__,__LINE__,"fcntl set fd flags err");
 		return -1;
 	}
 	return 0;
@@ -38,7 +38,8 @@ int create_and_bind(const char *port)
 	
 	s = getaddrinfo(NULL, port, &hints, &result);
 	if(s){
-		fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(s));
+		little_log_error(__FILE__,__LINE__,"getaddrinfo error[%s]", gai_strerror(s));
+		return -1;
 	}
 	
 	for(rp = result; rp!=NULL; rp=rp->ai_next){
@@ -47,14 +48,14 @@ int create_and_bind(const char *port)
 			continue;
 		s = bind(sfd, rp->ai_addr, rp->ai_addrlen);
 		if(s==0){
-			// bind successfullu
+			// bind successful
 			break;
 		}
 		close(sfd);
 	}
 	
-	if(rp=NULL){
-		fprintf(stderr, "could not bind\n");
+	if(rp==NULL){
+		little_log_error(__FILE__,__LINE__,"could not bind");
 		return -1;
 	}
 

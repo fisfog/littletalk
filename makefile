@@ -1,14 +1,15 @@
 VPATH=src
 CC=gcc
 CFLAGS=-I.
-DEPS=list.h rbtree.h littletalk.h
-OBJ=util.o rbtree.o littletalk.o
+OPT=-Wall
+DEPS=list.h rbtree.h littlelog.h littletalk.h 
+OBJ=util.o rbtree.o littlelog.o littletalk.o
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) $(OPT) -c -o $@ $< $(CFLAGS)
 
 littletalk: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) $(OPT) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 

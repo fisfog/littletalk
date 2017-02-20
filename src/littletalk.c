@@ -1,12 +1,11 @@
 /*
  * littletalk.c
  * 
- * muyunlei@gmail.com
- *
- *
+ * muyunlei@gmail.com * *
  */
 
 #include "littletalk.h"
+
 
 int server()
 {
@@ -16,33 +15,29 @@ int server()
 	int	nret;
 	int	exit_flag = 0;
 
-	bzero(&servaddr, sizeof(servaddr));
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_port = htons(LISTENPORT);
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	listenfd = socket(AF_INET, SOCK_STREAM, 0);
+	listenfd = create_and_bind(LISTENPORT);
 	if(listenfd==-1){
-		perror("socket err");
-		exit(-1);
-	}
-
-	nret = bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
-	if(nret==-1){
-		perror("bind err");
-		exit(-1);
+		little_log_error(__FILE__, __LINE__, "create and bind listen fd error");
+		return -1;
 	}
 
 	nret = set_socket_nonblock(listenfd);
 	if(nret==-1){
-		perror("setSocketNonblock err");
-		exit(-1);
+		little_log_error(__FILE__, __LINE__, "set socket nonblock error");
+		return -1;
+	}
+
+	nret = listen(listenfd, SOMAXCONN);
+	if(nret==-1){
+		little_log_error(__FILE__, __LINE__, "listen port[%s] error, errno[%d]", LISTENPORT, errno);
+		return -1;
 	}
 
 	epfd = epoll_create(MAXEPFDNUM);
 	if(epfd==-1){
-		perror("epoll_create err");
-		exit(-1);
+		little_log_error(__FILE__, __LINE__, "epoll create error, errno[%d]", errno);
+		return -1;
 	}
 
 	epdata *epd = malloc(sizeof(epdata));
@@ -84,5 +79,11 @@ end:
 
 int main(int argc, char **argv)
 {
+	set_log_file("./log/littletalk.log");
+	set_log_level(LITTLETALK_LOG_LEVEL);
+
+	little_log_debug(__FILE__,__LINE__,"littlelog debug test");
+	little_log_info(__FILE__,__LINE__,"littlelog info test");
+	little_log_error(__FILE__,__LINE__,"littlelog error test");
 	return 0;
 }

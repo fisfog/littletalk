@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <errno.h>
 #include <time.h>
@@ -31,8 +32,13 @@
 #include "list.h"
 #include "rbtree.h"
 
+/* little log lib */
+#include "littlelog.h"
+
+#define LITTLETALK_LOG_LEVEL LOG_FATAL
+
 /* LIMIT MACRO */
-#define LISTENPORT 20124
+#define LISTENPORT "20124"
 
 #define HEADLEN 4
 #define MAXBUFLEN 1024
